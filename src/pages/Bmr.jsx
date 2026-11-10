@@ -1,10 +1,69 @@
-
 import { Link } from "react-router";
 import bmr from "./../assets/bmr.png";
+import { useState } from "react";
+import { Swal } from "sweetalert2";
 
 export default function Bmr() {
+    const [weight, setWeight] = useState("");
+    const [height, setHeight] = useState("");
+    const [age, setAge] = useState("");
+    const [gender, setGender] = useState("male");
+    const [bmrValue, setBmr] = useState("0.00");
+
+const handleCalBmrClick = (e) => {
+        e.preventDefault();
+
+        if (weight === "") {
+            Swal.fire({
+                title: 'คำเตือน',
+                text: 'กรุณาป้อนน้ำหนัก',
+                icon: 'warning',
+            });
+            return;
+        }
+        if (height === "") {
+            Swal.fire({
+                title: 'คำเตือน',
+                text: 'กรุณาป้อนส่วนสูง',
+                icon: 'warning',
+            });
+            return;
+        }
+        if (age === "") {
+            Swal.fire({
+                title: 'คำเตือน',
+                text: 'กรุณาป้อนอายุ',
+                icon: 'warning',
+            });
+            return;
+        }
+        
+        let w = Number(weight);
+        let h = Number(height);
+        let a = Number(age);
+        let bmrResult;
+
+        if (gender === "male") {
+            bmrResult = 66.47 + (13.75 * w) + (5.003 * h) - (6.755 * a);
+        } else {
+            bmrResult = 655.1 + (9.563 * w) + (1.850 * h) - (4.676 * a);
+        }
+
+        setBmr(bmrResult.toFixed(2));
+    }
+
+const handleResetClick = (e) => {
+        e.preventDefault();
+        
+        setWeight("");
+        setHeight("");
+        setAge("");
+        setGender("male");
+        setBmr("0.00");
+    }
+
     return (
-        <div className="w-[90%] max-w-[510px] border border-gray-200
+        <div className="w-[90%] max-w-127.5 border border-gray-200
             mt-10 md:mt-16 mx-auto rounded-xl p-5 md:p-6
             flex flex-col items-center gap-2 shadow-2xl bg-white">
 
@@ -30,6 +89,8 @@ export default function Bmr() {
                     type="number"
                     className="w-full border border-gray-200 p-2 rounded-md
                     outline-none focus:border-indigo-400"
+                    value={weight}
+                    onChange={(e) => setWeight(e.target.value)}
                 />
 
                 <label className="text-xs font-kanit">
@@ -39,6 +100,8 @@ export default function Bmr() {
                     type="number"
                     className="w-full border border-gray-200 p-2 rounded-md
                     outline-none focus:border-indigo-400"
+                    value={height}
+                    onChange={(e) => setHeight(e.target.value)}
                 />
 
                 <label className="text-xs font-kanit">
@@ -48,6 +111,8 @@ export default function Bmr() {
                     type="number"
                     className="w-full border border-gray-200 p-2 rounded-md
                     outline-none focus:border-indigo-400"
+                    value={age}
+                    onChange={(e) => setAge(e.target.value)}
                 />
 
                 <fieldset className="font-kanit text-xs mt-1">
@@ -58,7 +123,8 @@ export default function Bmr() {
                             type="radio"
                             name="gender"
                             value="male"
-                            defaultChecked
+                            checked={gender === "male"}
+                            onChange={(e) => setGender(e.target.value)}
                         />
                         ชาย
                     </label>
@@ -68,6 +134,8 @@ export default function Bmr() {
                             type="radio"
                             name="gender"
                             value="female"
+                            checked={gender === "female"}
+                            onChange={(e) => setGender(e.target.value)}
                         />
                         หญิง
                     </label>
@@ -79,6 +147,7 @@ export default function Bmr() {
                         className="flex-1 bg-indigo-600 text-white
                         text-xs font-kanit p-2.5 rounded-md
                         hover:bg-indigo-700 cursor-pointer shadow"
+                        onClick={ handleCalBmrClick }
                     >
                         คำนวณ BMR
                     </button>
@@ -88,6 +157,7 @@ export default function Bmr() {
                         className="flex-1 bg-red-500 text-white
                         text-xs font-kanit p-2.5 rounded-md
                         hover:bg-red-600 cursor-pointer shadow"
+                        onClick={ handleResetClick }
                     >
                         รีเซ็ต
                     </button>
@@ -98,7 +168,7 @@ export default function Bmr() {
                 mt-1 font-kanit text-sm">
                 <p>ค่า BMR ที่คำนวณได้:</p>
                 <p className="font-bold text-indigo-600 ml-1">
-                    0.00
+                    {bmrValue}
                 </p>
             </div>
 
